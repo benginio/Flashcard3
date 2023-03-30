@@ -40,11 +40,17 @@ public class MainActivity extends AppCompatActivity {
 
         tvFlashcardAnswer = findViewById(R.id.flashcard_answer_textview);
         nextButton = findViewById(R.id.next_icon);
+        TextView flashcardAnswer1 = findViewById(R.id.flashcardAnswer1);
+         TextView flashcardAnswer2 = findViewById(R.id.flashcardAnswer2);
+         TextView flashcardAnswer3 = findViewById(R.id.flashcardAnswer3);
         tvFlashcardQuestion = findViewById(R.id.flashcard_question_textview);
         if (allFlashcards != null && allFlashcards.size() > 0) {
             int lastQindex = allFlashcards.size() - 1;
             tvFlashcardQuestion.setText(allFlashcards.get(lastQindex).getQuestion());
             tvFlashcardAnswer.setText(allFlashcards.get(lastQindex).getAnswer());
+            flashcardAnswer1.setText(allFlashcards.get(lastQindex).getWrongAnswer1());
+            flashcardAnswer2.setText(allFlashcards.get(lastQindex).getAnswer());
+            flashcardAnswer3.setText(allFlashcards.get(lastQindex).getWrongAnswer2());
 
         }
 
@@ -109,6 +115,40 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        flashcardAnswer1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.setBackgroundColor(getResources().getColor(R.color.incorrectAnswer));
+                flashcardAnswer2.setBackgroundColor(getResources().getColor(R.color.correctAnswer));
+                flashcardAnswer3.setBackgroundColor(getResources().getColor(R.color.incorrectAnswer));
+            }
+        });
+
+        flashcardAnswer2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.setBackgroundColor(getResources().getColor(R.color.correctAnswer));
+                flashcardAnswer1.setBackgroundColor(getResources().getColor(R.color.incorrectAnswer));
+                flashcardAnswer3.setBackgroundColor(getResources().getColor(R.color.incorrectAnswer));
+                new ParticleSystem(MainActivity.this, 40, R.drawable.confetti3, 3000)
+                        .setSpeedRange(0.2f, 0.5f)
+                        .oneShot(findViewById(R.id.flashcardAnswer2), 100);
+                new ParticleSystem(MainActivity.this, 40, R.drawable.confetti, 3000)
+                        .setSpeedRange(0.2f, 0.5f)
+                        .oneShot(findViewById(R.id.flashcardAnswer2), 100);
+                new ParticleSystem(MainActivity.this, 40, R.drawable.confetti2, 3000)
+                        .setSpeedRange(0.2f, 0.5f)
+                        .oneShot(findViewById(R.id.flashcardAnswer2), 100);
+            }
+        });
+        flashcardAnswer3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.setBackgroundColor(getResources().getColor(R.color.incorrectAnswer));
+                flashcardAnswer1.setBackgroundColor(getResources().getColor(R.color.incorrectAnswer));
+                flashcardAnswer2.setBackgroundColor(getResources().getColor(R.color.correctAnswer));
+            }
+        });
         nextButton.setOnClickListener(new View.OnClickListener() {//next card
             @Override
             public void onClick(View v) {
@@ -134,12 +174,22 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onAnimationStart(Animation animation) {
                         // this method is called when the animation first starts
+                        currentCardDisplayedIndex++;
+                        flashcardAnswer1.setBackgroundColor(getResources().getColor(R.color.answerOutline));
+                        flashcardAnswer2.setBackgroundColor(getResources().getColor(R.color.answerOutline));
+                        flashcardAnswer3.setBackgroundColor(getResources().getColor(R.color.answerOutline));
                     }
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
                         // this method is called when the animation is finished playing
-
+                        tvFlashcardQuestion.startAnimation(rightInAnim);
+                        tvFlashcardQuestion.setText(allFlashcards.get(currentCardDisplayedIndex).getQuestion());
+                        tvFlashcardAnswer.setText(allFlashcards.get(currentCardDisplayedIndex).getAnswer());
+                        flashcardAnswer1.setText(allFlashcards.get(currentCardDisplayedIndex).getWrongAnswer1());
+                        flashcardAnswer2.setText(allFlashcards.get(currentCardDisplayedIndex).getAnswer());
+                        flashcardAnswer3.setText(allFlashcards.get(currentCardDisplayedIndex).getWrongAnswer2());
+                        startTimer();
                         findViewById(R.id.flashcard_question_textview).startAnimation(rightInAnim);
 
 
@@ -170,17 +220,33 @@ public class MainActivity extends AppCompatActivity {
             tvFlashcardAnswer.setText(firstcard.getAnswer());
         }
     }
+    private void startTimer() {
+        countDownTimer.cancel();
+        countDownTimer.start();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        final TextView flashcardAnswer1 = findViewById(R.id.flashcardAnswer1);
+        final TextView flashcardAnswer2 = findViewById(R.id.flashcardAnswer2);
+        final TextView flashcardAnswer3 = findViewById(R.id.flashcardAnswer3);
         if (requestCode == 100) {
             //get data
             if (data != null) {//check if there's an Intent
                 String questionString = data.getExtras().getString("QUESTION_KEY");
                 String answerString = data.getExtras().getString("ANSWER_KEY");
+                String wrongAnswer1 = data.getExtras().getString("wrongAnswer1");
+                String wrongAnswer2 = data.getExtras().getString("wrongAnswer2");
                 tvFlashcardQuestion.setText(questionString);
                 tvFlashcardAnswer.setText(answerString);
+                flashcardAnswer1.setText(wrongAnswer1);
+                flashcardAnswer2.setText(answerString);
+                flashcardAnswer3.setText(wrongAnswer2);
+
+                flashcardAnswer1.setBackgroundColor(getResources().getColor(R.color.answerOutline));
+                flashcardAnswer2.setBackgroundColor(getResources().getColor(R.color.answerOutline));
+                flashcardAnswer3.setBackgroundColor(getResources().getColor(R.color.answerOutline));
 
                 Flashcard flashcard = new Flashcard(questionString, answerString);
                 flashcardDatabase.insertCard(flashcard);

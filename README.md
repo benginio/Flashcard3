@@ -3,22 +3,22 @@
 ## Lab 4
 
 ### App Description
-`TODO://` Flashcard like a quiz, with codePath
+`TODO://` Add app description
 
 ### App Walk-though
-`TODO://` 
+`TODO://` Add the URL to your animated app walk-though `gif` in the image tag below. Make sure the gif actually renders and animates when viewing this README. (☝️ Remove this paragraph after after adding gif)
+
 <img src="YOUR_GIF_URL_HERE" width=200><br>
 
 `TODO://` In the User stories section below, add an `x` between the `-[ ]` like this `- [x]` for any user story you complete. (☝️ Remove this paragraph after after checking off user stories)
 
 ## Required
-- [x] User should see the app icon 
-- [x] User should see a splash screen
-- [x] User should see an flip animation when revealing the answer
-- [x] User should see a slide animation when going to the next flashcard
-- [x] User should see a slide animation when going to the previous flashcard
-- [x] Push code to GitHub
+- [x] User sees a transition animation when going from the main screen to the add card screen.
+- [x] User sees a reveal animation when the flashcard is tapped and the answer is shown
+- [x] User sees flashcards animating in / out when the 'next' button is tapped
+
 ## Optional
-- [x] User should see a nicer flaschard with rounded corners, shadows, and animating when showing the first time
-- [ ] User should see all views properly layout when using the app on a phone of different sizes
-- [ ] Correct answer in multiple choice should be random
+- [ ] Extra styling is added!
+- [ ] User sees a countdown timer for each question
+- [ ] User sees a 'card flip' animation when the card is tapped
+- [ ] User sees a celebration animation with confetti when they answer a question correctly
